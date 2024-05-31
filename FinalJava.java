@@ -1,0 +1,351 @@
+
+// import java.sql.Statement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.JOptionPane;
+
+// import com.mysql.cj.jdbc.Driver;
+import com.mysql.cj.xdevapi.Client;
+
+public class FinalJava {
+    public static void main(String[] args) throws ClassNotFoundException {
+        String host = "mysql-1d9cf496-sistema-ventas.g.aivencloud.com";
+        String port = "19068";
+        String databaseName = "final";
+        String userName = "avnadmin";
+        String password = "AVNS_Hp45VnSLc7_dunfbGIJ";
+
+        @SuppressWarnings("unused")
+        class Client {
+            private int id;
+            private String name;
+            private String last_name;
+            private String rut;
+            private String email;
+            private String phone;
+            private int id_address;
+
+            public Client(String name, String last_name, String rut, String phone, String email, int id_address) {
+                this.name = name;
+                this.last_name = last_name;
+                this.rut = rut;
+                this.phone = phone;
+                this.email = email;
+                this.id_address = id_address;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
+
+            public String getLastName() {
+                return last_name;
+            }
+
+            public void setLastName(String last_name) {
+                this.last_name = last_name;
+            }
+
+            public String getRut() {
+                return rut;
+            }
+
+            public void setRut(String rut) {
+                this.rut = rut;
+            }
+
+            public String getEmail() {
+                return email;
+            }
+
+            public void setEmail(String email) {
+                this.email = email;
+            }
+
+            public String getPhone() {
+                return phone;
+            }
+
+            public void setPhone(String phone) {
+                this.phone = phone;
+            }
+
+            public int getIdAddress() {
+                return id_address;
+            }
+
+            public void setIdAddress(int id_address) {
+                this.id_address = id_address;
+            }
+        }
+
+        class Order {
+            private int id;
+            private Double shipping;
+            private int tax;
+            private int id_client;
+            private int product_id;
+            private Double total_order;
+
+            public Order(Double shipping, int tax, int id_client, int product_id, Double total_order) {
+                this.shipping = shipping;
+                this.tax = tax;
+                this.id_client = id_client;
+                this.product_id = product_id;
+                this.total_order = total_order;
+            }
+
+            public Double getShipping() {
+                return shipping;
+            }
+
+            public void setShipping(Double shipping) {
+                this.shipping = shipping;
+            }
+
+            public int getTax() {
+                return tax;
+            }
+
+            public void setTax(int tax) {
+                this.tax = tax;
+            }
+
+            public int getIdClient() {
+                return id_client;
+            }
+
+            public void setIdClient(int id_client) {
+                this.id_client = id_client;
+            }
+
+            public int getProductId() {
+                return product_id;
+            }
+
+            public void setProductId(int product_id) {
+                this.product_id = product_id;
+            }
+
+            public Double getTotalOrder() {
+                return total_order;
+            }
+
+            public void setTotalOrder(Double total_order) {
+                this.total_order = total_order;
+            }
+
+        }
+
+       
+       
+    class Product {
+        private int id;
+        private String name;
+        private double price;
+        
+        public Product(String name, double price) {
+            this.name = name;
+            this.price = price;
+        }
+        
+        public int getId() {
+            return id;
+        }
+        
+        public void setId(int id) {
+            this.id = id;
+        }
+        
+        public String getName() {
+            return name;
+        }
+        
+        public void setName(String name) {
+            this.name = name;
+        }
+        
+        public double getPrice() {
+            return price;
+        }
+        
+        public void setPrice(double price) {
+            this.price = price;
+        }
+    }
+       
+       
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection connection = DriverManager.getConnection(
+                    "jdbc:mysql://" + host + ":" + port + "/" + databaseName + "?sslmode=require", userName, password);
+            System.out.println("Connection successful to MySQL database");
+
+            boolean backToMenu = true;
+            while (backToMenu) {
+                String[] options = { "Create", "Read", "Update", "Delete", "Exit" };
+                int choice = JOptionPane.showOptionDialog(null, "Select CRUD operation:", "CRUD Operation",
+                        JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+
+                switch (choice) {
+                    case 0: // Create
+                        String insertQuery = "INSERT INTO clients (name, last_name, rut, phone, email, id_address) VALUES (?, ?, ?, ?, ?, ?)";
+                        try (PreparedStatement statement = connection.prepareStatement(insertQuery)) {
+                            String name = JOptionPane.showInputDialog("Enter client name:");
+                            String last_name = JOptionPane.showInputDialog("Enter client last name:");
+                            String rut = JOptionPane.showInputDialog("Enter client rut:");
+                            String email = JOptionPane.showInputDialog("Enter client email:");
+                            String phone = JOptionPane.showInputDialog("Enter client phone:");
+                            // TODO Get address from database
+                            String address = JOptionPane.showInputDialog("Enter client id_address:");
+                            int id_address = Integer.parseInt(address);
+
+                            Client client = new Client(name, last_name, rut, email, phone, id_address);
+
+                            statement.setString(1, client.name);
+                            statement.setString(2, client.last_name);
+                            statement.setString(3, client.rut);
+                            statement.setString(4, client.email);
+                            statement.setString(5, client.phone);
+                            statement.setInt(6, client.id_address);
+                            int rowsInserted = statement.executeUpdate();
+                            if (rowsInserted > 0) {
+                                JOptionPane.showMessageDialog(null, "Client created successfully");
+                            }
+                        } catch (SQLException e) {
+                            JOptionPane.showMessageDialog(null, "Error creating client: " + e.getMessage());
+                        }
+                        break;
+                    case 1:
+                        String selectQuery = "SELECT * FROM clients";
+                        try (PreparedStatement statement = connection.prepareStatement(selectQuery);
+                                ResultSet resultSet = statement.executeQuery(selectQuery)) {
+
+                            List<Client> clientList = new ArrayList<Client>();
+                            while (resultSet.next()) {
+                                int id = resultSet.getInt("id");
+                                String name = resultSet.getString("name");
+                                String last_name = resultSet.getString("last_name");
+                                String rut = resultSet.getString("rut");
+                                String phone = resultSet.getString("phone");
+                                String email = resultSet.getString("email");
+                                int id_address = resultSet.getInt("id_address");
+                                Client client = new Client(name, last_name, rut, email, phone, id_address);
+                                clientList.add(client);
+                            }
+                            Client[] clients = clientList.toArray(new Client[clientList.size()]);
+
+                            StringBuilder sb = new StringBuilder();
+                            for (Client client : clients) {
+                                sb.append("ID: ").append(client.id).append(", Name: ").append(client.name)
+                                        .append(", Last Name: ").append(client.getLastName()).append(", Email: ")
+                                        .append(client.getEmail())
+                                        .append(", Address: ").append(client.getIdAddress()).append("\n");
+                            }
+                            String clientString = sb.toString();
+                            JOptionPane.showMessageDialog(null, clientString);
+                        } catch (SQLException e) {
+                            System.out.println("Error retrieving address: " + e.getMessage());
+                        }
+                        break;
+                    case 2: // Update
+                        String idToUpdate = JOptionPane.showInputDialog("Enter client ID to update:");
+                        String selectClientQuery = "SELECT * FROM clients WHERE id = ?";
+                        try (PreparedStatement selectStatement = connection.prepareStatement(selectClientQuery)) {
+                            selectStatement.setInt(1, Integer.parseInt(idToUpdate));
+                            try (ResultSet resultSet = selectStatement.executeQuery()) {
+                                if (resultSet.next()) {
+                                    String name = resultSet.getString("name");
+                                    String last_name = resultSet.getString("last_name");
+                                    String rut = resultSet.getString("rut");
+                                    String phone = resultSet.getString("phone");
+                                    String email = resultSet.getString("email");
+                                    int id_address = resultSet.getInt("id_address");
+                                    
+                                    StringBuilder currentInfo = new StringBuilder();
+                                    currentInfo.append("Current Information:\n");
+                                    currentInfo.append("Name: ").append(name).append("\n");
+                                    currentInfo.append("Last Name: ").append(last_name).append("\n");
+                                    currentInfo.append("RUT: ").append(rut).append("\n");
+                                    currentInfo.append("Phone: ").append(phone).append("\n");
+                                    currentInfo.append("Email: ").append(email).append("\n");
+                                    currentInfo.append("Address ID: ").append(id_address).append("\n");
+                                    JOptionPane.showMessageDialog(null, currentInfo.toString());
+                                    
+                                    String newPhone = JOptionPane.showInputDialog("Enter new phone:");
+                                    String newEmail = JOptionPane.showInputDialog("Enter new email:");
+                                    int newAddress = Integer.parseInt(JOptionPane.showInputDialog("Enter new address ID:"));
+                                    
+                                    String updateQuery = "UPDATE clients SET email = ?, phone = ?, id_address = ?   WHERE id = ?"; 
+                                    try (PreparedStatement updateStatement = connection.prepareStatement(updateQuery)) {
+                                        updateStatement.setString(1, newEmail);
+                                        updateStatement.setString(2, newPhone);
+                                        updateStatement.setInt(3, newAddress);
+                                        updateStatement.setInt(4, Integer.parseInt(idToUpdate));
+                                        int rowsUpdated = updateStatement.executeUpdate();
+                                        if (rowsUpdated > 0) {
+                                            System.out.println("Client updated successfully");
+                                            JOptionPane.showMessageDialog(null, "Client updated successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+                                        }
+                                    } catch (SQLException e) {
+                                        System.out.println("Error updating client: " + e.getMessage());
+                                    }
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Client not found", "Error", JOptionPane.ERROR_MESSAGE);
+                                }
+                            }
+                        } catch (SQLException e) {
+                            System.out.println("Error retrieving client information: " + e.getMessage());
+                        }
+                        break;
+                    case 3: // Delete
+                        String deleteQuery = "DELETE FROM clients WHERE id = ?";
+                        try (PreparedStatement statement = connection.prepareStatement(deleteQuery)) {
+                            String clientId = JOptionPane.showInputDialog("Enter client ID to delete:");
+                            System.err.println("Client ID to delete: " + clientId);
+                            int idToDelete = Integer.parseInt(clientId);
+                            statement.setInt(1, idToDelete);
+                            int rowsDeleted = statement.executeUpdate();
+                            if (rowsDeleted > 0) {
+                                System.out.println("Client deleted successfully");
+                                JOptionPane.showMessageDialog(null, "Client deleted successfully", "Success",
+                                        JOptionPane.INFORMATION_MESSAGE);
+                            }
+                        } catch (SQLException e) {
+                            System.out.println("Error deleting client: " + e.getMessage());
+                        }
+                        break;
+                    case 4: // Exit
+                        backToMenu = false;
+                        break;
+                    default:
+                        // Invalid choice
+                        break;
+                }
+            }
+
+            // ==================== Cerrar conexión ====================
+
+            connection.close();
+        } catch (
+
+        ClassNotFoundException e) {
+            System.out.println("MySQL JDBC driver not found");
+            e.printStackTrace();
+
+        } catch (SQLException e) {
+            System.out.println("Error connecting to MySQL database: " + e.getMessage());
+        }
+
+    }
+}

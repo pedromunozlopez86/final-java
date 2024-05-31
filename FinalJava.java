@@ -89,102 +89,125 @@ public class FinalJava {
             }
         }
 
-        class Order {
+        // class Order {
+        // private int id;
+        // private Double shipping;
+        // private int tax;
+        // private int id_client;
+        // private int product_id;
+        // private Double total_order;
+
+        // public Order(Double shipping, int tax, int id_client, int product_id, Double
+        // total_order) {
+        // this.shipping = shipping;
+        // this.tax = tax;
+        // this.id_client = id_client;
+        // this.product_id = product_id;
+        // this.total_order = total_order;
+        // }
+
+        // public Double getShipping() {
+        // return shipping;
+        // }
+
+        // public void setShipping(Double shipping) {
+        // this.shipping = shipping;
+        // }
+
+        // public int getTax() {
+        // return tax;
+        // }
+
+        // public void setTax(int tax) {
+        // this.tax = tax;
+        // }
+
+        // public int getIdClient() {
+        // return id_client;
+        // }
+
+        // public void setIdClient(int id_client) {
+        // this.id_client = id_client;
+        // }
+
+        // public int getProductId() {
+        // return product_id;
+        // }
+
+        // public void setProductId(int product_id) {
+        // this.product_id = product_id;
+        // }
+
+        // public Double getTotalOrder() {
+        // return total_order;
+        // }
+
+        // public void setTotalOrder(Double total_order) {
+        // this.total_order = total_order;
+        // }
+
+        // }
+
+        // class Product {
+        // private int id;
+        // private String name;
+        // private double price;
+
+        // public Product(String name, double price) {
+        // this.name = name;
+        // this.price = price;
+        // }
+
+        // public int getId() {
+        // return id;
+        // }
+
+        // public void setId(int id) {
+        // this.id = id;
+        // }
+
+        // public String getName() {
+        // return name;
+        // }
+
+        // public void setName(String name) {
+        // this.name = name;
+        // }
+
+        // public double getPrice() {
+        // return price;
+        // }
+
+        // public void setPrice(double price) {
+        // this.price = price;
+        // }
+        // }
+
+        class Address {
             private int id;
-            private Double shipping;
-            private int tax;
-            private int id_client;
-            private int product_id;
-            private Double total_order;
+            private String description;
 
-            public Order(Double shipping, int tax, int id_client, int product_id, Double total_order) {
-                this.shipping = shipping;
-                this.tax = tax;
-                this.id_client = id_client;
-                this.product_id = product_id;
-                this.total_order = total_order;
+            public Address(int id, String description) {
+                this.id = id;
+                this.description = description;
             }
 
-            public Double getShipping() {
-                return shipping;
+            public int getId() {
+                return id;
             }
 
-            public void setShipping(Double shipping) {
-                this.shipping = shipping;
+            public void setId(int id) {
+                this.id = id;
             }
 
-            public int getTax() {
-                return tax;
+            public String getDescription() {
+                return description;
             }
 
-            public void setTax(int tax) {
-                this.tax = tax;
+            public void setDescription(String description) {
+                this.description = description;
             }
-
-            public int getIdClient() {
-                return id_client;
-            }
-
-            public void setIdClient(int id_client) {
-                this.id_client = id_client;
-            }
-
-            public int getProductId() {
-                return product_id;
-            }
-
-            public void setProductId(int product_id) {
-                this.product_id = product_id;
-            }
-
-            public Double getTotalOrder() {
-                return total_order;
-            }
-
-            public void setTotalOrder(Double total_order) {
-                this.total_order = total_order;
-            }
-
         }
-
-       
-       
-    class Product {
-        private int id;
-        private String name;
-        private double price;
-        
-        public Product(String name, double price) {
-            this.name = name;
-            this.price = price;
-        }
-        
-        public int getId() {
-            return id;
-        }
-        
-        public void setId(int id) {
-            this.id = id;
-        }
-        
-        public String getName() {
-            return name;
-        }
-        
-        public void setName(String name) {
-            this.name = name;
-        }
-        
-        public double getPrice() {
-            return price;
-        }
-        
-        public void setPrice(double price) {
-            this.price = price;
-        }
-    }
-       
-       
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection connection = DriverManager.getConnection(
@@ -207,6 +230,29 @@ public class FinalJava {
                             String email = JOptionPane.showInputDialog("Enter client email:");
                             String phone = JOptionPane.showInputDialog("Enter client phone:");
                             // TODO Get address from database
+                            String addressQuery = "SELECT * FROM addresses";
+                            try (PreparedStatement addressStatement = connection.prepareStatement(addressQuery);
+                                    ResultSet addressResultSet = addressStatement.executeQuery()) {
+
+                                List<Address> addressList = new ArrayList<>();
+                                while (addressResultSet.next()) {
+                                    String address = addressResultSet.getString("description");
+                                    int id_add = addressResultSet.getInt("id");
+
+                                }
+                                String[] addresses = addressList.toArray(new String[addressList.size()]);
+                                String selectedAddress = (String) JOptionPane.showInputDialog(null, "Select an adress:",
+                                        "Address Selection",
+                                        JOptionPane.QUESTION_MESSAGE, null, addresses, addresses[0]);
+                                if (selectedAddress != null) {
+                                    // Use the selected address
+                                    // TODO: Do something with the selected address
+                                    System.out.println("Selected address: " + selectedAddress);
+                                }
+                            } catch (SQLException e) {
+                                JOptionPane.showMessageDialog(null, "Error retrieving addresses: " + e.getMessage());
+                            }
+
                             String address = JOptionPane.showInputDialog("Enter client id_address:");
                             int id_address = Integer.parseInt(address);
 
@@ -271,7 +317,7 @@ public class FinalJava {
                                     String phone = resultSet.getString("phone");
                                     String email = resultSet.getString("email");
                                     int id_address = resultSet.getInt("id_address");
-                                    
+
                                     StringBuilder currentInfo = new StringBuilder();
                                     currentInfo.append("Current Information:\n");
                                     currentInfo.append("Name: ").append(name).append("\n");
@@ -281,12 +327,13 @@ public class FinalJava {
                                     currentInfo.append("Email: ").append(email).append("\n");
                                     currentInfo.append("Address ID: ").append(id_address).append("\n");
                                     JOptionPane.showMessageDialog(null, currentInfo.toString());
-                                    
+
                                     String newPhone = JOptionPane.showInputDialog("Enter new phone:");
                                     String newEmail = JOptionPane.showInputDialog("Enter new email:");
-                                    int newAddress = Integer.parseInt(JOptionPane.showInputDialog("Enter new address ID:"));
-                                    
-                                    String updateQuery = "UPDATE clients SET email = ?, phone = ?, id_address = ?   WHERE id = ?"; 
+                                    int newAddress = Integer
+                                            .parseInt(JOptionPane.showInputDialog("Enter new address ID:"));
+
+                                    String updateQuery = "UPDATE clients SET email = ?, phone = ?, id_address = ?   WHERE id = ?";
                                     try (PreparedStatement updateStatement = connection.prepareStatement(updateQuery)) {
                                         updateStatement.setString(1, newEmail);
                                         updateStatement.setString(2, newPhone);
@@ -295,13 +342,15 @@ public class FinalJava {
                                         int rowsUpdated = updateStatement.executeUpdate();
                                         if (rowsUpdated > 0) {
                                             System.out.println("Client updated successfully");
-                                            JOptionPane.showMessageDialog(null, "Client updated successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+                                            JOptionPane.showMessageDialog(null, "Client updated successfully",
+                                                    "Success", JOptionPane.INFORMATION_MESSAGE);
                                         }
                                     } catch (SQLException e) {
                                         System.out.println("Error updating client: " + e.getMessage());
                                     }
                                 } else {
-                                    JOptionPane.showMessageDialog(null, "Client not found", "Error", JOptionPane.ERROR_MESSAGE);
+                                    JOptionPane.showMessageDialog(null, "Client not found", "Error",
+                                            JOptionPane.ERROR_MESSAGE);
                                 }
                             }
                         } catch (SQLException e) {

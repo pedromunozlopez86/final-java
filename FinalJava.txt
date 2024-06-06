@@ -1,5 +1,8 @@
+=================================
+ENTREGA FINAL PROGRAMACIÓN 2024
+Alumnos: Juan Pablo Muñoz - Pedro Muñoz López
+=================================
 
-// import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -10,7 +13,6 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-// import com.mysql.cj.jdbc.Driver;
 import com.mysql.cj.xdevapi.Client;
 
 public class FinalJava {
@@ -89,100 +91,6 @@ public class FinalJava {
             }
         }
 
-        // class Order {
-        // private int id;
-        // private Double shipping;
-        // private int tax;
-        // private int id_client;
-        // private int product_id;
-        // private Double total_order;
-
-        // public Order(Double shipping, int tax, int id_client, int product_id, Double
-        // total_order) {
-        // this.shipping = shipping;
-        // this.tax = tax;
-        // this.id_client = id_client;
-        // this.product_id = product_id;
-        // this.total_order = total_order;
-        // }
-
-        // public Double getShipping() {
-        // return shipping;
-        // }
-
-        // public void setShipping(Double shipping) {
-        // this.shipping = shipping;
-        // }
-
-        // public int getTax() {
-        // return tax;
-        // }
-
-        // public void setTax(int tax) {
-        // this.tax = tax;
-        // }
-
-        // public int getIdClient() {
-        // return id_client;
-        // }
-
-        // public void setIdClient(int id_client) {
-        // this.id_client = id_client;
-        // }
-
-        // public int getProductId() {
-        // return product_id;
-        // }
-
-        // public void setProductId(int product_id) {
-        // this.product_id = product_id;
-        // }
-
-        // public Double getTotalOrder() {
-        // return total_order;
-        // }
-
-        // public void setTotalOrder(Double total_order) {
-        // this.total_order = total_order;
-        // }
-
-        // }
-
-        // class Product {
-        // private int id;
-        // private String name;
-        // private double price;
-
-        // public Product(String name, double price) {
-        // this.name = name;
-        // this.price = price;
-        // }
-
-        // public int getId() {
-        // return id;
-        // }
-
-        // public void setId(int id) {
-        // this.id = id;
-        // }
-
-        // public String getName() {
-        // return name;
-        // }
-
-        // public void setName(String name) {
-        // this.name = name;
-        // }
-
-        // public double getPrice() {
-        // return price;
-        // }
-
-        // public void setPrice(double price) {
-        // this.price = price;
-        // }
-        // }
-
         class Address {
             private int id;
             private String description;
@@ -229,30 +137,8 @@ public class FinalJava {
                             String rut = JOptionPane.showInputDialog("Enter client rut:");
                             String email = JOptionPane.showInputDialog("Enter client email:");
                             String phone = JOptionPane.showInputDialog("Enter client phone:");
+                           
                             // TODO Get address from database
-                            // String addressQuery = "SELECT * FROM addresses";
-                            // try (PreparedStatement addressStatement = connection.prepareStatement(addressQuery);
-                            //         ResultSet addressResultSet = addressStatement.executeQuery()) {
-
-                            //     List<Address> addressList = new ArrayList<>();
-                            //     while (addressResultSet.next()) {
-                            //         String address = addressResultSet.getString("description");
-                            //         int id_add = addressResultSet.getInt("id");
-
-                            //     }
-                            //     String[] addresses = addressList.toArray(new String[addressList.size()]);
-                            //     String selectedAddress = (String) JOptionPane.showInputDialog(null, "Select an adress:",
-                            //             "Address Selection",
-                            //             JOptionPane.QUESTION_MESSAGE, null, addresses, addresses[0]);
-                            //     if (selectedAddress != null) {
-                            //         // Use the selected address
-                            //         // TODO: Do something with the selected address
-                            //         System.out.println("Selected address: " + selectedAddress);
-                            //     }
-
-                            // } catch (SQLException e) {
-                            //     JOptionPane.showMessageDialog(null, "Error retrieving addresses: " + e.getMessage());
-                            // }
 
                             String address = JOptionPane.showInputDialog("Enter client id_address:");
                             int id_address = Integer.parseInt(address);
